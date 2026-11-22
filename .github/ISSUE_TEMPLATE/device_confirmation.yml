@@ -1,0 +1,137 @@
+name: Device confirmation
+description: NECKTIED runs on your camera – tell us what works. Requires a photo as proof.
+title: "[Device] <camera> – <firmware version>"
+labels: ["device-report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you! Your report moves a camera from "lab-tested" to "tested on a device" in [TESTED.md](../blob/main/TESTED.md).
+
+        **Privacy:** photos and files can show your location, licence plates or faces. Crop or blur them before uploading.
+
+  - type: dropdown
+    id: camera
+    attributes:
+      label: Camera
+      options:
+        - A329S
+        - A329T
+        - A329TC
+        - A329WW
+        - A329
+        - A229 Plus
+        - A229 Pro
+        - A229 Pro Tele
+        - A229 Ultra
+        - VS1
+        - A119 Mini
+        - A119 Mini 2
+    validations:
+      required: true
+
+  - type: input
+    id: firmware
+    attributes:
+      label: VIOFO firmware version
+      description: The original version you patched, as listed in the README (e.g. V2.2_260815).
+      placeholder: V2.2_260815
+    validations:
+      required: true
+
+  - type: input
+    id: necktied
+    attributes:
+      label: NECKTIED version
+      description: Release you used (e.g. v1.0). The patcher web page shows it at the bottom.
+      placeholder: v1.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: method
+    attributes:
+      label: How did you install it?
+      options:
+        - SD mode (firmware not changed)
+        - Flashed, patched with the web page
+        - Flashed, patched with the command line
+    validations:
+      required: true
+
+  - type: input
+    id: date
+    attributes:
+      label: Test date
+      placeholder: "2026-12-01"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ### Results
+        Choose "not tested" for everything you did not check. Daylight saving time can only be confirmed when a change actually happened (e.g. last Sunday of March/October in Europe).
+
+  - type: dropdown
+    id: r_version
+    attributes:
+      label: Version tag "-NECKTIED" in the camera menu or app
+      options: [works, does not work, not tested]
+    validations:
+      required: true
+  - type: dropdown
+    id: r_timezone
+    attributes:
+      label: Time zone set automatically from GPS
+      options: [works, does not work, not tested]
+    validations:
+      required: true
+  - type: dropdown
+    id: r_dst
+    attributes:
+      label: Daylight saving time change observed
+      options: [works, does not work, not tested]
+    validations:
+      required: true
+  - type: dropdown
+    id: r_sun
+    attributes:
+      label: '"Sun" HDR (on before sunset, off after sunrise)'
+      options: [works, does not work, not tested]
+    validations:
+      required: true
+  - type: dropdown
+    id: r_images
+    attributes:
+      label: Power-on and power-off image
+      options: [works, only power-on image, does not work, not tested, camera has no display]
+    validations:
+      required: true
+
+  - type: textarea
+    id: proof
+    attributes:
+      label: Photo as proof
+      description: |
+        Drag and drop at least one photo here. Best: the camera screen or app showing the version ending with "-NECKTIED"; additional photos of the start-up image or the HDR menu are welcome.
+        Cameras without display (VS1): a screenshot of the VIOFO app showing the version.
+      placeholder: Drop the photo(s) here – GitHub inserts a link.
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything else, e.g. the HDR on/off times you saw, your time zone, problems you noticed.
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: The photo shows my own camera running NECKTIED.
+          required: true
+        - label: My GitHub user name may be listed as reporter in TESTED.md.
+          required: true

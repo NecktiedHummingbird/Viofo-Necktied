@@ -1,0 +1,131 @@
+name: Bug report
+description: Something does not work as described.
+title: "[Bug] <short description>"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check first that your camera runs **exactly** the firmware version listed in the README – other versions are not supported.
+        If the camera does not start any more: install the original firmware from <https://www.viofo.com/pages/firmware> the same way you installed NECKTIED, or remove the NECKTIED files from the card if you used SD mode.
+
+        **Privacy:** photos, videos and files can show your location, licence plates or faces. Crop or blur them before uploading.
+
+  - type: dropdown
+    id: camera
+    attributes:
+      label: Camera
+      options:
+        - A329S
+        - A329T
+        - A329TC
+        - A329WW
+        - A329
+        - A229 Plus
+        - A229 Pro
+        - A229 Pro Tele
+        - A229 Ultra
+        - VS1
+        - A119 Mini
+        - A119 Mini 2
+        - Other / not in this list
+    validations:
+      required: true
+
+  - type: input
+    id: firmware
+    attributes:
+      label: VIOFO firmware version
+      placeholder: V2.2_260815
+    validations:
+      required: true
+
+  - type: input
+    id: necktied
+    attributes:
+      label: NECKTIED version
+      placeholder: v1.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: method
+    attributes:
+      label: Where does the problem occur?
+      options:
+        - Patcher web page
+        - Command line patcher
+        - Camera in SD mode
+        - Camera with flashed NECKTIED firmware
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected feature
+      options:
+        - Building the firmware (patcher)
+        - Installing / camera does not start
+        - Clock or time zone
+        - Daylight saving time
+        - '"Sun" HDR'
+        - Power-on / power-off image
+        - Version tag
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include the exact error message of the patcher if there was one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: status
+    attributes:
+      label: SD mode status file
+      description: If you use SD mode, paste the content of NECKTIED_SD_STATUS.txt from the memory card.
+      render: text
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Photos or screenshots
+      description: Optional, but very helpful (camera screen, patcher page, settings).
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and operating system (patcher only)
+      placeholder: Firefox 140 on Windows 11
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Checks
+      options:
+        - label: I used exactly the firmware version listed in the README.
+          required: true
+        - label: I searched the existing issues and found no report of this problem.
+          required: true

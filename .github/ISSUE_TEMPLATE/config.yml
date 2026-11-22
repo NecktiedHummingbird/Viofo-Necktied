@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Original VIOFO firmware
+    url: https://www.viofo.com/pages/firmware
+    about: Download the original firmware for your camera (also the way back).
+  - name: Supported cameras and firmware versions
+    url: https://github.com/NecktiedHummingbird/Viofo-Necktied#supported-cameras
+    about: Check first that your camera runs exactly the supported firmware version.

@@ -1,0 +1,8 @@
+# Firmware-Dateien gehören nie in dieses Repository
+*.bin
+!assets/necktied_tz.bin
+*.BIN
+__pycache__/
+# downloaded from the release for the command line patcher
+patcher/necktied-package.zip
+*.pyc

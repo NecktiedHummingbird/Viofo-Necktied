@@ -1,0 +1,65 @@
+name: Feature request
+description: Suggest a new feature, another camera or a newer VIOFO firmware version.
+title: "[Request] <short description>"
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        NECKTIED only adds functions to the original VIOFO firmware. Requests that need changes to the image processing, the video recording itself or VIOFO's app servers are out of reach.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of request
+      options:
+        - New feature
+        - Change to an existing feature
+        - Support for another camera
+        - Support for a newer VIOFO firmware version
+    validations:
+      required: true
+
+  - type: input
+    id: camera
+    attributes:
+      label: Camera(s)
+      placeholder: A229 Pro
+    validations:
+      required: true
+
+  - type: input
+    id: firmware
+    attributes:
+      label: VIOFO firmware version (for camera or firmware requests)
+      description: The exact version from <https://www.viofo.com/pages/firmware>.
+      placeholder: V1.6_270102
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the situation in which you miss the feature.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: How should it work on the camera? Which setting or menu entry would you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Checks
+      options:
+        - label: I searched the existing issues and found no similar request.
+          required: true
