@@ -160,4 +160,48 @@ Status dieses Modells: %s.""",
         "HINWEIS: Die Kamera erwartet den Dateinamen %s – vor dem Kopieren umbenennen.",
     "ERROR: reading back %s gave a different checksum": "FEHLER: Rücklesen von %s ergab eine andere Prüfsumme",
     "Written: %s\n  sha256 %s (%d bytes, %.1f s)\n": "Geschrieben: %s\n  sha256 %s (%d Byte, %.1f s)\n",
+    # rtos.py (group C, A119 V3)
+    "MODELEXT without partition table": "MODELEXT ohne Partitionstabelle",
+    "Picture %s too big for the slot (%d > %d bytes)": "Bild %s zu groß für den Platz (%d > %d Byte)",
+    "Partition layout differs from the supported firmware": "Partitionsaufbau weicht von der unterstützten Firmware ab",
+    "Unpacking RTOS": "RTOS entpacken",
+    "RTOS not readable: %s": "RTOS nicht lesbar: %s",
+    "RTOS differs from the supported firmware": "RTOS weicht von der unterstützten Firmware ab",
+    "RTOS checksum of the original is wrong": "RTOS-Prüfsumme des Originals stimmt nicht",
+    "%s: address %#x outside the RTOS": "%s: Adresse %#x außerhalb des RTOS",
+    "%s: overlaps another change": "%s: überschneidet sich mit einer anderen Änderung",
+    "A change hits the RTOS checksum": "Eine Änderung trifft die RTOS-Prüfsumme",
+    "Compressing RTOS (LZMA)": "RTOS komprimieren (LZMA)",
+    "Packing firmware": "Firmware packen",
+    "Container and all partitions pass the checks of the U-Boot (GUID, checksums, sizes, flash partitions)":
+        "Container und alle Partitionen bestehen die Prüfungen des U-Boot (GUID, Prüfsummen, Größen, "
+        "Flash-Partitionen)",
+    "All partitions except the RTOS byte-identical to the original":
+        "Alle Partitionen außer dem RTOS byte-identisch zum Original",
+    "new RTOS not readable: %s": "neues RTOS nicht lesbar: %s",
+    "new RTOS: size or checksum wrong": "neues RTOS: Größe oder Prüfsumme falsch",
+    "%s: not written as in the package": "%s: nicht wie im Paket geschrieben",
+    "new RTOS: unexpected change at %#x": "neues RTOS: unerwartete Änderung bei %#x",
+    "RTOS unpacked again: checksum valid, only the intended bytes changed (%d bytes in %d changes)":
+        "RTOS erneut entpackt: Prüfsumme gültig, nur die beabsichtigten Bytes geändert (%d Byte in %d Änderungen)",
+    "Changes in the RTOS: %s": "Änderungen im RTOS: %s",
+    """SD card instructions (%s, %s):
+  1. Format the SD card in the camera (or FAT32/exFAT), then copy %s to the root directory
+     of the card on the computer (exactly this file name, no other firmware files).
+  2. Eject the card cleanly.
+  3. Insert the card into the camera and switch it on. The camera installs the update while starting up.
+     Do NOT disconnect the power during the update.
+  4. Check that the firmware version in the menu ends with -NECKTIED, then delete %s from the card
+     if it is still there (otherwise the camera may install it again at every start).
+Way back: the same with the original from https://www.viofo.com/pages/firmware (%s, sha256 %s…).
+Status of this model: %s.""": """Kartenanleitung (%s, %s):
+  1. SD-Karte in der Kamera formatieren (oder FAT32/exFAT), dann am Rechner %s ins
+     Hauptverzeichnis der Karte kopieren (genau dieser Dateiname, keine anderen Firmware-Dateien).
+  2. Karte sauber auswerfen.
+  3. Karte in die Kamera, Kamera einschalten. Die Kamera spielt das Update beim Hochfahren ein.
+     Während des Updates NICHT vom Strom trennen.
+  4. Prüfen, dass die Firmware-Version im Menü auf -NECKTIED endet, dann %s von der Karte löschen,
+     falls sie noch dort liegt (sonst spielt die Kamera sie womöglich bei jedem Start erneut ein).
+Rückweg: dasselbe mit dem Original von https://www.viofo.com/pages/firmware (%s, sha256 %s…).
+Status dieses Modells: %s.""",
 }

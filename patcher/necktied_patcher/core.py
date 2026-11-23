@@ -1,6 +1,6 @@
-"""NECKTIED patcher core for the Linux models (groups A, B, B2): builds the NECKTIED firmware
-from the stock image the user downloaded and our own patch package. Pure Python (standard
-library only), runs with CPython and in the browser with Pyodide.
+"""NECKTIED patcher core: builds the NECKTIED firmware from the stock image the user downloaded
+and our own patch package. Pure Python (standard library only), runs with CPython and in the
+browser with Pyodide. Linux models (groups A, B, B2) here; RTOS models (group C) in rtos.py.
 
     image, report = patch(original_bytes, package, variant="release", progress=callback)
 
@@ -18,8 +18,10 @@ import struct
 import time
 
 from . import nvtpack as nv
+from . import rtos
 from . import ubi
 from .check import check_ubifs
+from .errors import PatchError
 from .fsedit import FsEdit
 from .i18n import _, set_lang, get_lang
 from .package import Package, VARIANTS
@@ -29,10 +31,6 @@ from .ubifs_write import Writer
 
 SPACE = b" \t\v\f\r"                    # [[:space:]] of sed (C locale, without newline)
 COMPRESSION = {"none": COMPR_NONE, "zlib": COMPR_ZLIB}
-
-
-class PatchError(Exception):
-    pass
 
 
 def _sha256(b):
@@ -46,15 +44,32 @@ def identify(original, package):
     sha = _sha256(original)
     b, mod = package.model_by_sha256(sha)
     name = nv.bin_name(original)
+    if mod is None and name is None:
+        name = rtos_name(original, package)
     if mod is None:
         known = package.models().get(name)
         if known:
             raise PatchError(_("This is a different firmware version for %s. NECKTIED needs exactly %s (sha256 %s…) from "
                                "https://www.viofo.com/pages/firmware.") % (known["model"], known["version"], known["sha256"][:16]))
         raise PatchError(_("This firmware (%s, sha256 %s…) is not supported.") % (name or _("unknown"), sha[:16]))
-    if name != b:
+    if package.group(mod["group"]).get("kind") != "rtos" and name != b:
         raise PatchError(_("BIN_NAME %r does not match model %s") % (name, b))
     return b, mod
+
+
+def rtos_name(original, package):
+    """Model of an RTOS firmware of another version: same partition ids and sizes within reach
+    of a supported one (only for the error message)."""
+    try:
+        ids = sorted(e[2] for e in rtos.parse_pack(original)["entries"])
+    except Exception:
+        return None
+    for b, mod in package.models().items():
+        if package.group(mod["group"]).get("kind") == "rtos":
+            if sorted(e[2] for e in rtos.spec_of(package, mod)["layout"]) == ids and len(original) // 2**20 \
+                    == mod.get("size", 0) // 2**20:
+                return b
+    return None
 
 
 def apply_s99(text, rule):
@@ -103,10 +118,21 @@ def tree_manifest(tree, content=True):
     return out
 
 
-def card_instructions(bname, mod):
+def card_instructions(bname, mod, rtos_model=False):
     fw = bname + ".bin"
     status = (_("tested on a device") if mod.get("verified")
               else _("ONLY TESTED LOCALLY – not yet tested on a device for this model"))
+    if rtos_model:
+        return _("""SD card instructions (%s, %s):
+  1. Format the SD card in the camera (or FAT32/exFAT), then copy %s to the root directory
+     of the card on the computer (exactly this file name, no other firmware files).
+  2. Eject the card cleanly.
+  3. Insert the card into the camera and switch it on. The camera installs the update while starting up.
+     Do NOT disconnect the power during the update.
+  4. Check that the firmware version in the menu ends with -NECKTIED, then delete %s from the card
+     if it is still there (otherwise the camera may install it again at every start).
+Way back: the same with the original from https://www.viofo.com/pages/firmware (%s, sha256 %s…).
+Status of this model: %s.""") % (mod["model"], bname, fw, fw, mod["version"], mod["sha256"][:16], status)
     return _("""SD card instructions (%s, %s):
   1. Format the SD card in the camera (or FAT32/exFAT), then copy %s to the root directory
      of the card on the computer (exactly this file name, no other firmware files).
@@ -155,6 +181,20 @@ def patch(original, package, variant="release", logo=True, compression="none", p
     grp = package.group(mod["group"])
     if variant not in grp["variants"]:
         raise PatchError(_("Variant %r is not contained in this package") % variant)
+    if grp.get("kind") == "rtos":
+        image, fields, checks = rtos.patch_rtos(original, package, mod, bname, logo, goodbye, verify, step)
+        report = dict(bin_name=bname, file_name=bname + ".bin", model=mod["model"], firmware=mod["version"],
+                      group=mod["group"], verified=mod.get("verified", False), variant=variant,
+                      package_version=package.version, compression="lzma",
+                      original_sha256=_sha256(original), image_sha256=_sha256(image), image_size=len(image),
+                      goodbye=bool(goodbye and mod.get("goodbye")), **fields)
+        if verify:
+            report["checks"] = checks
+        step(1.0, _("done"))
+        report["seconds"] = round(time.time() - t0, 2)
+        report["step_times"] = times
+        report["instructions"] = card_instructions(bname, mod, rtos_model=True)
+        return image, report
     pk = nv.Pack(original)
     if pk.ids() != sorted(mod["part_ids"]):
         raise PatchError(_("Partition list %s instead of %s") % (pk.ids(), mod["part_ids"]))

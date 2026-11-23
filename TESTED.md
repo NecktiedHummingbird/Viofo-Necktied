@@ -16,7 +16,7 @@ Status of every supported camera and feature. Lab tests run automatically for ev
 | VS1 | V1.1_260812 | 🧪 | 🧪 | 🧪 | 🧪 | — |
 | A119 Mini | V1.2 (2026-08-26) | 🧪 | 🧪 | 🧪 | 🧪 | 🧪 |
 | A119 Mini 2 | V3.2 (2026-08-26) | 🧪 | 🧪 | 🧪 | 🧪 | 🧪 |
-| A119 V3 | V2.6 (2024-10-31) | ⏳ | — | ⏳ | ⏳ | ⏳ |
+| A119 V3 | V2.6 (2024-10-31) | 🧪 | — | 🧪 | 🧪 | 🧪 |
 | A129 Plus Duo | V2.0 (2024-10-16) | ⏳ | — | ⏳ | ⏳ | ⏳ |
 | A129 Pro Duo | V2.91 (2024-09-13) | ⏳ | — | ⏳ | — | ⏳ |
 | A139 Pro | V1.2_240710 | ⏳ | — | ⏳ | ⏳ | — |
@@ -32,7 +32,8 @@ Status of every supported camera and feature. Lab tests run automatically for ev
 - **A229 Plus, A229 Pro, A229 Pro Tele, A229 Ultra, VS1:** self test under qemu-arm, image check, kernel mount test
 - **A119 Mini, A119 Mini 2:** self test under qemu-arm, image check, kernel mount test
 - **Daylight saving time rules** (Europe, USA/Canada, Australia, New Zealand, Chile): every transition 2025–2045 compared with the tz database (zoneinfo)
-- **A119 V3, A129 Plus Duo, A129 Pro Duo, A139 Pro, A139 2CH/3CH, T130, WM1:** emulation of the patched code (Unicorn), boot-loader checks
+- **A119 V3:** emulation of the patched code (Unicorn) on the patcher's output, the boot loader's own decompression run in emulation, boot-loader checks of the whole file
+- **A129 Plus Duo, A129 Pro Duo, A139 Pro, A139 2CH/3CH, T130, WM1:** emulation of the patched code (Unicorn), boot-loader checks
 
 ## Reports from real devices
 

@@ -13,6 +13,7 @@ async function init() {
   postMessage({ type: "status", text: "pyodide" });
   importScripts(PYODIDE + "pyodide.js");
   py = await loadPyodide({ indexURL: PYODIDE });
+  await py.loadPackage("lzma");     // RTOS models (A119 V3): LZMA of the Python standard library
   const site = await (await fetch("site.json", { cache: "no-cache" })).json();
   py.FS.mkdirTree("/lib/necktied_patcher");
   for (const f of site.py_files) {

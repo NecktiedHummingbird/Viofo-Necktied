@@ -8,6 +8,7 @@ import hashlib
 
 from necktied_patcher import Package, PackageError, PatchError, patch, set_lang
 from necktied_patcher import nvtpack as nv
+from necktied_patcher.core import rtos_name
 
 _pkg = None
 _orig = None
@@ -33,8 +34,9 @@ def identify(data):
         name = None
     b, mod = _pkg.model_by_sha256(hashlib.sha256(data).hexdigest())
     if mod is None:
+        name = name or rtos_name(data, _pkg)
         return {"error": "version" if name in _pkg.models() else "unsupported", "bin": name}
-    if name != b:
+    if _pkg.group(mod["group"]).get("kind") != "rtos" and name != b:
         return {"error": "unsupported", "bin": name}
     _orig = data
     return {"bin": b}

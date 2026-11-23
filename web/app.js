@@ -2,7 +2,7 @@
 // The patching runs in worker.js (Pyodide); this file is only the user interface.
 "use strict";
 
-const PLANNED = ["A119 V3", "A129 Plus Duo", "A129 Pro Duo", "A139 Pro / 2CH / 3CH", "T130", "WM1"];
+const PLANNED = ["A119 V3", "A129 Plus Duo", "A129 Pro Duo", "A139 Pro / 2CH / 3CH", "T130", "WM1"];   // shown until the package supports them
 
 const TEXT = {
   en: {
@@ -18,7 +18,7 @@ const TEXT = {
     dropSlimH: "Already downloaded the firmware?", dropSlimP: "Drop it here and the camera is recognised.",
     dropH: "Drag the firmware file here", dropP: "e.g. {0} from your downloads folder",
     choose: "Choose file", expected: "expected: {0}, version {1}",
-    famA329: "A329 family", famA229: "A229 family", famVS1: "VS1", famA119: "A119 Mini family", famPlanned: "Coming later",
+    famA329: "A329 family", famA229: "A229 family", famA119: "A119 family", famOther: "Other cameras", famPlanned: "Coming later",
     fw: "Firmware {0}", notYet: "not supported yet",
     tested: "tested on a device", experimental: "experimental",
     loading: "Loading the patcher (once, about 15 MB) …", loadPkg: "Loading NECKTIED files …",
@@ -74,6 +74,7 @@ const TEXT = {
     how4: "The camera installs the update by itself. <b>Do not cut the power during the update.</b>",
     how5Display: "Done when the NECKTIED start-up picture appears and the version in the menu ends with {0}.",
     how5: "Done when the version in the menu or app ends with {0}.",
+    how6Rtos: "Then delete {0} from the card if it is still there – otherwise the camera may install it again at every start.",
     howBack: "Back to the original: install the original firmware from VIOFO the same way.",
     startOver: "Patch another firmware",
     errUnknownH: "This file is not a camera firmware",
@@ -100,7 +101,7 @@ const TEXT = {
     dropSlimH: "Firmware-Datei schon geladen?", dropSlimP: "Hier ablegen, die Kamera wird daran erkannt.",
     dropH: "Firmware-Datei hierher ziehen", dropP: "z. B. {0} aus deinem Download-Ordner",
     choose: "Datei auswählen", expected: "erwartet: {0}, Version {1}",
-    famA329: "A329-Familie", famA229: "A229-Familie", famVS1: "VS1", famA119: "A119-Mini-Familie", famPlanned: "Kommt später",
+    famA329: "A329-Familie", famA229: "A229-Familie", famA119: "A119-Familie", famOther: "Weitere Kameras", famPlanned: "Kommt später",
     fw: "Firmware {0}", notYet: "noch nicht unterstützt",
     tested: "am Gerät getestet", experimental: "experimentell",
     loading: "Patcher wird geladen (einmalig, etwa 15 MB) …", loadPkg: "NECKTIED-Dateien werden geladen …",
@@ -156,6 +157,7 @@ const TEXT = {
     how4: "Die Kamera spielt das Update von selbst ein. <b>Währenddessen nicht vom Strom trennen.</b>",
     how5Display: "Fertig, wenn das NECKTIED-Startbild erscheint und die Version im Menü auf {0} endet.",
     how5: "Fertig, wenn die Version im Menü oder in der App auf {0} endet.",
+    how6Rtos: "Danach {0} von der Karte löschen, falls sie noch dort liegt – sonst spielt die Kamera sie womöglich bei jedem Start erneut ein.",
     howBack: "Zurück zum Original: die Original-Firmware von VIOFO genauso aufspielen.",
     startOver: "Weitere Firmware patchen",
     errUnknownH: "Diese Datei ist keine Kamera-Firmware",
@@ -238,15 +240,16 @@ function statusPill(c) {
   return c.tested ? `<span class="pill ok">${t("tested")}</span>` : `<span class="pill warn">${t("experimental")}</span>`;
 }
 function camGrid() {
-  const fams = ["A329", "A229", "VS1", "A119"];
-  let html = fams.map((f) => {
+  const famHtml = (f) => {
     const cams = site.cameras.filter((c) => c.family === f);
     if (!cams.length) return "";
     return `<div class="family"><span>${t("fam" + f)}</span><div class="cams">` + cams.map((c) =>
       `<button class="cam" type="button" data-cam="${c.bin}" aria-pressed="${c.bin === S.cam}"><b>${esc(c.name)}</b><small>${esc(t("fw", c.version))}</small></button>`
     ).join("") + `</div></div>`;
-  }).join("");
-  html += `<div class="family"><span>${t("famPlanned")}</span><div class="cams">` + PLANNED.map((n) =>
+  };
+  let html = ["A329", "A229", "A119", "Other"].map(famHtml).join("");   // "Other" last of the available ones
+  const planned = PLANNED.filter((n) => !site.cameras.some((c) => c.name === n));
+  if (planned.length) html += `<div class="family"><span>${t("famPlanned")}</span><div class="cams">` + planned.map((n) =>
     `<button class="cam" type="button" disabled><b>${esc(n)}</b><small>${t("notYet")}</small></button>`).join("") + `</div></div>`;
   return html;
 }
@@ -297,7 +300,8 @@ function warnAck() {
 function howTo(c) {
   return `<div class="stack"><h3>${t("howH")}</h3><ol class="steps">
     <li><span>${t("how1")}</span></li><li><span>${t("how2", mono(c.file))}</span></li><li><span>${t("how3")}</span></li>
-    <li><span>${t("how4")}</span></li><li><span>${t(c.display ? "how5Display" : "how5", mono("-NECKTIED"))}</span></li></ol>
+    <li><span>${t("how4")}</span></li><li><span>${t(c.display ? "how5Display" : "how5", mono("-NECKTIED"))}</span></li>
+    ${c.rtos ? `<li><span>${t("how6Rtos", mono(c.file))}</span></li>` : ""}</ol>
     <p class="stepnote">${t("howBack")}</p></div>`;
 }
 

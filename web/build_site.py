@@ -24,11 +24,11 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TOP = os.path.dirname(HERE)
 PAGE = ["index.html", "style.css", "app.js", "worker.js"]
 SD = {"A": "NECKTIED_SD_A.zip", "B": "NECKTIED_SD_B.zip"}      # groups with an SD start path
-FAMILY = {"A": "A329", "B": "A229"}
+FAMILY = {"A": "A329", "B": "A229"}            # other groups: A119 by name, everything else "Other"
 
 
 def short_version(v):
-    m = re.search(r"_(V\d+\.\d+)\.(\d{4})(\d\d)(\d\d)$", v)
+    m = re.search(r"[_.](V\d+\.\d+)\.(\d{4})(\d\d)(\d\d)$", v)
     if m:
         return "%s (%s-%s-%s)" % m.groups()
     m = re.search(r"_(V\d+\.\d+_\d{6})$", v)
@@ -46,12 +46,13 @@ def find_logo():
 def cameras(manifest):
     out = []
     for b, m in manifest["models"].items():
-        fam = "VS1" if m["model"] == "VS1" else FAMILY.get(m["group"], "A119")
+        fam = "Other" if m["model"] == "VS1" else "A119" if m["model"].startswith("A119") \
+            else FAMILY.get(m["group"], "Other")
         out.append(dict(bin=b, name=m["model"], file=b + ".bin", version=short_version(m["version"]),
                         tested=bool(m.get("verified")), display=bool(m.get("logo")),
-                        sd=m["group"] if m["group"] in SD else None, family=fam))
-    order = {"A329": 0, "A229": 1, "VS1": 2, "A119": 3}
-    out.sort(key=lambda c: (order.get(c["family"], 9), c["bin"] != "FWA329S", c["name"]))
+                        sd=m["group"] if m["group"] in SD else None, family=fam, rtos=m["group"] == "C"))
+    order = {"A329": 0, "A229": 1, "A119": 2, "Other": 3}
+    out.sort(key=lambda c: (order.get(c["family"], 9), c["bin"] != "FWA329S", c["rtos"], c["name"]))
     return out
 
 

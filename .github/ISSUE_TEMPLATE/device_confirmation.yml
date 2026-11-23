@@ -27,6 +27,7 @@ body:
         - VS1
         - A119 Mini
         - A119 Mini 2
+        - A119 V3
     validations:
       required: true
 

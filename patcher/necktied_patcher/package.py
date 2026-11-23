@@ -24,6 +24,11 @@ Manifest (format_version 1):
                             "goodbye": "files/goodbye/necktied_goodbye_512x384.jpg" | null}},
     "goodbye" (model and install entry) is optional: older packages without it are still valid.
      "files": {"files/A/necktied.so": {"sha256": "...", "size": 55728}, ...}}
+Format version 2 adds RTOS groups (group C, static patch of the RTOS image, rtos.py):
+    "groups": {"C": {"kind": "rtos", "description": "...", "variants": {"release": "rtos"}}}
+    "models": {"FWA119V3": {..., "group": "C", "size": <stock file size>,
+                            "rtos": "files/C/FWA119V3.json",            patch description (rtos.py)
+                            "logo": "files/logo/...rtos.jpg", "goodbye": "files/goodbye/...rtos.jpg"}}
 """
 import hashlib
 import io
@@ -33,7 +38,8 @@ import zipfile
 from .i18n import _
 
 FORMAT = "necktied-patch-package"
-FORMAT_VERSION = 1
+FORMAT_VERSION = 2          # 2: groups of kind "rtos" (group C); version 1 packages are still read
+FORMAT_VERSIONS = (1, 2)
 VARIANTS = ("release", "diagnose")
 
 
@@ -68,7 +74,7 @@ class Package:
 
     def _check(self):
         m = self.manifest
-        if m.get("format") != FORMAT or m.get("format_version") != FORMAT_VERSION:
+        if m.get("format") != FORMAT or m.get("format_version") not in FORMAT_VERSIONS:
             raise PackageError(_("unknown package format %r/%r") % (m.get("format"), m.get("format_version")))
         for name, meta in m["files"].items():
             data = self.files.get(name)
@@ -85,8 +91,11 @@ class Package:
                 raise PackageError(_("%s: group %s missing in the package") % (b, mod["group"]))
             if "release" not in g["variants"]:
                 raise PackageError(_("%s: release library missing in the package") % b)
-            refs = [g["tz"]] + list(g["variants"].values()) + ([mod["logo"]] if mod.get("logo") else []) \
-                + ([mod["goodbye"]] if mod.get("goodbye") else [])
+            pics = ([mod["logo"]] if mod.get("logo") else []) + ([mod["goodbye"]] if mod.get("goodbye") else [])
+            if g.get("kind") == "rtos":
+                refs = [mod.get("rtos")] + pics
+            else:
+                refs = [g["tz"]] + list(g["variants"].values()) + pics
             for r in refs:
                 if r not in m["files"]:
                     raise PackageError(_("%s: file %s missing in the manifest") % (b, r))

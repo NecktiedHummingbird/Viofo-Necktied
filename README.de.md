@@ -23,7 +23,7 @@ Dieses Repository enthält **keine Viofo-Firmware**. Du lädst das Original-Upda
 
 ## Funktionen je Kamera
 
-| Funktion | A329-Familie | A229-Familie | VS1 | A119 Mini / Mini 2 | A119 V3 ¹ | A129 Plus Duo ¹ | A129 Pro Duo ¹ | A139 Pro / 2CH/3CH ¹ | T130 ¹ | WM1 ¹ |
+| Funktion | A329-Familie | A229-Familie | VS1 | A119 Mini / Mini 2 | A119 V3 ¹ | A129 Plus Duo ¹ ⁴ | A129 Pro Duo ¹ ⁴ | A139 Pro / 2CH/3CH ¹ ⁴ | T130 ¹ ⁴ | WM1 ¹ ⁴ |
 |---|---|---|---|---|---|---|---|---|---|---|
 | Zeitzone aus der GPS-Position | ⚙️ | ⚙️ | ⚙️ | ⚙️ | — | — | — | — | — | — |
 | Sommerzeit nach Regel | ⚙️ | ⚙️ | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 |
@@ -34,15 +34,17 @@ Dieses Repository enthält **keine Viofo-Firmware**. Du lädst das Original-Upda
 
 ⚙️ per Einstellung bzw. gepatchter Menüoption · 🔒 immer aktiv (vom Patch vorgegeben) · ✔️ bereits in der Original-Firmware · — nicht verfügbar
 
-¹ Geplant, noch nicht im öffentlichen Patcher. Diese Kameras erkennen keine Zeitzone; ihre Sommerzeit richtet sich nach dem eingestellten Versatz (nur Europa, USA/Kanada).
+¹ Diese Kameras erkennen keine Zeitzone; ihre Sommerzeit richtet sich nach dem eingestellten Versatz (nur Europa, USA/Kanada).
 
 ² Im Original nur per App; NECKTIED ergänzt es im Kameramenü.
 
 ³ Nur Einschaltbild.
 
+⁴ Geplant, noch nicht im öffentlichen Patcher.
+
 **So wird es eingeschaltet**
 
-- **Zeitzone aus der GPS-Position:** Einstellung „GPS-Zeitabgleich“ an (A329-/A229-Familie zusätzlich „Sommerzeit“ an). Die Kamera stellt dann ihre Zeitzone nach der Position; wer die Zone von Hand ändert, pausiert die Automatik bis zum nächsten Start.
+- **Zeitzone aus der GPS-Position:** Einstellung „GPS-Zeitabgleich“ an. Die Kamera stellt dann ihre Zeitzone nach der Position, unabhängig von der Einstellung „Sommerzeit“ (A329-/A229-Familie: ist sie aus, bleibt die Kamera das ganze Jahr auf Normalzeit); wer die Zone von Hand ändert, pausiert die Automatik bis zum nächsten Start.
 - **Sommerzeit nach Regel:** A329-/A229-Familie: Einstellung „Sommerzeit“ an – NECKTIED wendet die echte Regel der Zone an statt pauschal +1 h. Alle anderen Kameras haben keine solche Einstellung, dort gilt die Regel immer. **Normalzeit-Zone einstellen** (Deutschland: UTC+1, Sydney: UTC+10 – auch im Sommer).
   - Bekannte Regeln: Europa, USA/Kanada, Australien (NSW, Victoria, Tasmanien, South Australia, ACT, Norfolkinsel), Neuseeland, Chile. Zonen ohne Sommerzeit (z. B. Queensland, Brasilien, Argentinien, Südafrika, große Teile Asiens und Afrikas) bleiben richtigerweise auf Normalzeit.
   - Nicht unterstützt: Zonen mit anderen Regeln (z. B. Israel, Ägypten, Libanon, Kuba; Lord-Howe-Insel mit ihrer halben Stunde) bekommen keine Sommerzeit.
@@ -111,6 +113,8 @@ Kamera ist wieder original. Im Paket liegt eine `LIESMICH.txt` mit allen Einzelh
    kopieren. Den Dateinamen vom Patcher beibehalten (z. B. `FWA329S.bin`), keine andere Firmware-Datei auf die Karte legen.
 4. Karte sauber auswerfen, in die Kamera stecken, Kamera einschalten. Die Kamera aktualisiert sich selbst –
    **während des Updates nicht vom Strom trennen**. Danach ist die Datei von der Karte verschwunden.
+   - A119 V3: Nach dem Update prüfen, ob die Version auf `-NECKTIED` endet; liegt die Datei noch auf der Karte,
+     sie löschen, damit die Kamera beim nächsten Start nicht erneut aktualisiert.
 
 **Rückweg:** die Original-Firmware von VIOFO genauso aufspielen (Punkte 3–4 von Schritt 2).
 
@@ -131,11 +135,11 @@ Kamera ist wieder original. Im Paket liegt eine `LIESMICH.txt` mit allen Einzelh
 | A229 Ultra | V1.2_260813 | Patcher oder SD-Modus | experimentell |
 | **VS1** | | | |
 | VS1 | V1.1_260812 | Patcher oder SD-Modus | experimentell |
-| **A119-Mini-Familie** | | | |
+| **A119-Familie** | | | |
 | A119 Mini | V1.2 (2026-08-26) | Patcher | experimentell |
 | A119 Mini 2 | V3.2 (2026-08-26) | Patcher | experimentell |
+| A119 V3 | V2.6 (2024-10-31) | Patcher | experimentell |
 | **Weitere Kameras (geplant)** | | | |
-| A119 V3 | V2.6 (2024-10-31) | geplant | geplant |
 | A129 Plus Duo | V2.0 (2024-10-16) | geplant | geplant |
 | A129 Pro Duo | V2.91 (2024-09-13) | geplant | geplant |
 | A139 Pro | V1.2_240710 | geplant | geplant |

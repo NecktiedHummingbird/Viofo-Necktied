@@ -24,7 +24,7 @@ This repository contains **no VIOFO firmware**. You download the original update
 
 ## Features per camera
 
-| Feature | A329 family | A229 family | VS1 | A119 Mini / Mini 2 | A119 V3 ¹ | A129 Plus Duo ¹ | A129 Pro Duo ¹ | A139 Pro / 2CH/3CH ¹ | T130 ¹ | WM1 ¹ |
+| Feature | A329 family | A229 family | VS1 | A119 Mini / Mini 2 | A119 V3 ¹ | A129 Plus Duo ¹ ⁴ | A129 Pro Duo ¹ ⁴ | A139 Pro / 2CH/3CH ¹ ⁴ | T130 ¹ ⁴ | WM1 ¹ ⁴ |
 |---|---|---|---|---|---|---|---|---|---|---|
 | Time zone from GPS position | ⚙️ | ⚙️ | ⚙️ | ⚙️ | — | — | — | — | — | — |
 | Daylight saving time by rule | ⚙️ | ⚙️ | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 | 🔒 |
@@ -35,15 +35,17 @@ This repository contains **no VIOFO firmware**. You download the original update
 
 ⚙️ enabled by a setting or a patched menu option · 🔒 always on (set by the patch) · ✔️ already in the original firmware · — not available
 
-¹ Planned, not yet in the public patcher. These cameras cannot detect the time zone; their daylight saving time follows the set offset (Europe, USA/Canada only).
+¹ These cameras cannot detect the time zone; their daylight saving time follows the set offset (Europe, USA/Canada only).
 
 ² The original offers it only in the app; NECKTIED adds it to the camera menu.
 
 ³ Power-on image only.
 
+⁴ Planned, not yet in the public patcher.
+
 **How to enable**
 
-- **Time zone from GPS position:** camera settings "GPS time sync" on (A329/A229 family additionally "Daylight saving time" on). The camera then sets its time zone from the position; changing the zone by hand pauses the automation until the next start.
+- **Time zone from GPS position:** camera setting "GPS time sync" on. The camera then sets its time zone from the position, independent of the "Daylight saving time" setting (A329/A229 family: with it off, the camera keeps standard time all year); changing the zone by hand pauses the automation until the next start.
 - **Daylight saving time by rule:** A329/A229 family: setting "Daylight saving time" on – NECKTIED applies the real rule of the zone instead of a flat +1 h. All other cameras have no such setting, so the rule is always active. **Set the standard-time zone** (e.g. Germany: UTC+1, Sydney: UTC+10 – also in summer).
   - Known rules: Europe, USA/Canada, Australia (NSW, Victoria, Tasmania, South Australia, ACT, Norfolk Island), New Zealand, Chile. Zones without daylight saving time (e.g. Queensland, Brazil, Argentina, South Africa, most of Asia and Africa) stay on standard time, as they should.
   - Not supported: zones with other rules (e.g. Israel, Egypt, Lebanon, Cuba; Lord Howe Island with its 30-minute shift) get no daylight saving time.
@@ -111,6 +113,8 @@ original again. The package contains a `README.txt` with all details.
    card. Keep the file name the patcher gives you (e.g. `FWA329S.bin`) and put no other firmware file on the card.
 4. Eject the card safely, put it into the camera, switch the camera on. The camera updates itself – **do not
    cut the power during the update**. Afterwards the file is gone from the card.
+   - A119 V3: after the update, check that the version ends in `-NECKTIED`; if the file is still on the card,
+     delete it so the camera does not update again at the next start.
 
 **Going back:** install the original firmware from VIOFO the same way (steps 3–4 of step 2).
 
@@ -131,11 +135,11 @@ original again. The package contains a `README.txt` with all details.
 | A229 Ultra | V1.2_260813 | patcher or SD mode | experimental |
 | **VS1** | | | |
 | VS1 | V1.1_260812 | patcher or SD mode | experimental |
-| **A119 Mini family** | | | |
+| **A119 family** | | | |
 | A119 Mini | V1.2 (2026-08-26) | patcher | experimental |
 | A119 Mini 2 | V3.2 (2026-08-26) | patcher | experimental |
+| A119 V3 | V2.6 (2024-10-31) | patcher | experimental |
 | **More cameras (planned)** | | | |
-| A119 V3 | V2.6 (2024-10-31) | planned | planned |
 | A129 Plus Duo | V2.0 (2024-10-16) | planned | planned |
 | A129 Pro Duo | V2.91 (2024-09-13) | planned | planned |
 | A139 Pro | V1.2_240710 | planned | planned |
