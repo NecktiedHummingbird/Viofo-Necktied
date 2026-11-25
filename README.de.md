@@ -34,7 +34,7 @@ Dieses Repository enthält **keine Viofo-Firmware**. Du lädst das Original-Upda
 
 ⚙️ per Einstellung bzw. gepatchter Menüoption · 🔒 immer aktiv (vom Patch vorgegeben) · ✔️ bereits in der Original-Firmware · — nicht verfügbar
 
-¹ Diese Kameras erkennen keine Zeitzone; ihre Sommerzeit richtet sich nach dem eingestellten Versatz (nur Europa, USA/Kanada).
+¹ NECKTIED erkennt die Zeitzone auf diesen Kameras (noch) nicht; ihre Sommerzeit richtet sich nach dem eingestellten Versatz (nur Europa, USA/Kanada).
 
 ² Im Original nur per App; NECKTIED ergänzt es im Kameramenü.
 
@@ -100,6 +100,15 @@ Für A329-Familie, A229-Familie und VS1. Die Firmware wird nicht verändert.
 Beenden: die NECKTIED-Dateien von der Karte löschen (oder die Karte in der Kamera formatieren) – die
 Kamera ist wieder original. Im Paket liegt eine `LIESMICH.txt` mit allen Einzelheiten.
 
+**A119 V3 – Test ohne Flashen (experimentell, an keinem Gerät bestätigt):** Der Patcher (Schritt 2) baut aus
+deiner Original-Firmware zusätzlich Testdateien: `FWA119VT.BIN` und `FW96670T.BIN` (im Browser: „Erst
+ausprobieren“; auf der Kommandozeile: Ordner `NECKTIED_SD_TEST`). Beide ins Wurzelverzeichnis der Karte kopieren –
+**ohne** `FWA119V3.bin` auf der Karte, denn diese Datei würde das Update einspielen – und die Kamera einschalten.
+Startet die Kamera die Testdatei, erscheint das NECKTIED-Einschaltbild und die Version endet auf `-NECKTIED`;
+während des Tests läuft die Kamera womöglich mit Werkseinstellungen. Sieht alles aus wie immer, unterstützt die
+Kamera diesen Teststart nicht; es wurde nichts geschrieben. Beenden: die Testdateien löschen. Bitte melde dein
+Ergebnis als GitHub-Issue – ob das klappt, ist noch offen.
+
 ### Schritt 2: dauerhaft installieren (flashen)
 
 1. Original-Firmware für deine Kamera bei VIOFO laden: <https://www.viofo.com/pages/firmware>.
@@ -138,7 +147,7 @@ Kamera ist wieder original. Im Paket liegt eine `LIESMICH.txt` mit allen Einzelh
 | **A119-Familie** | | | |
 | A119 Mini | V1.2 (2026-08-26) | Patcher | experimentell |
 | A119 Mini 2 | V3.2 (2026-08-26) | Patcher | experimentell |
-| A119 V3 | V2.6 (2024-10-31) | Patcher | experimentell |
+| A119 V3 | V2.6 (2024-10-31) | Patcher (Test ohne Flashen: experimentell) | experimentell |
 | **Weitere Kameras (geplant)** | | | |
 | A129 Plus Duo | V2.0 (2024-10-16) | geplant | geplant |
 | A129 Pro Duo | V2.91 (2024-09-13) | geplant | geplant |

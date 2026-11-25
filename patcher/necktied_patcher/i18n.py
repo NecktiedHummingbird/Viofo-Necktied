@@ -100,6 +100,26 @@ DE = {
     "owners, xattrs; contents of the new files = package":
         "Dateibaum: %d Einträge, nur %s neu und %s geändert; alle übrigen Dateien mit identischen Datenknoten, "
         "Rechten, Eigentümern, xattrs; Inhalte der neuen Dateien = Paket",
+    # test without flashing (group C)
+    """Test without flashing (EXPERIMENTAL, %s):
+  1. Copy %s from the folder %s to the root directory of the card.
+     There must be NO %s on the card at the same time – that file would install the update.
+  2. Eject the card cleanly, insert it into the camera and switch it on. Nothing is written to the camera.
+  3. If the camera starts the test file, the NECKTIED start-up picture appears and the firmware version
+     in the menu ends with -NECKTIED. During the test the camera may run with factory settings.
+     If the normal VIOFO start-up picture appears, the camera does not support this test start.
+  4. To end the test: delete %s from the card.
+It is not yet confirmed which cameras start the test file. Please report your result (GitHub issue).""":
+    """Test ohne Flashen (EXPERIMENTELL, %s):
+  1. %s aus dem Ordner %s ins oberste Verzeichnis der Karte kopieren.
+     Dabei darf KEINE %s auf der Karte liegen – diese Datei würde das Update einspielen.
+  2. Karte sauber auswerfen, in die Kamera stecken und einschalten. In die Kamera wird nichts geschrieben.
+  3. Startet die Kamera die Testdatei, erscheint das NECKTIED-Startbild und die Firmware-Version im Menü
+     endet auf -NECKTIED. Während des Tests läuft die Kamera womöglich mit Werkseinstellungen.
+     Erscheint das normale VIOFO-Startbild, unterstützt die Kamera diesen Teststart nicht.
+  4. Test beenden: %s von der Karte löschen.
+Welche Kameras die Testdatei starten, ist noch nicht bestätigt. Bitte melde dein Ergebnis (GitHub-Issue).""",
+    "Test files (start without flashing, experimental):": "Testdateien (Start ohne Flashen, experimentell):",
     # card instructions
     "tested on a device": "auf dem Gerät geprüft",
     "ONLY TESTED LOCALLY – not yet tested on a device for this model":

@@ -35,7 +35,7 @@ This repository contains **no VIOFO firmware**. You download the original update
 
 ⚙️ enabled by a setting or a patched menu option · 🔒 always on (set by the patch) · ✔️ already in the original firmware · — not available
 
-¹ These cameras cannot detect the time zone; their daylight saving time follows the set offset (Europe, USA/Canada only).
+¹ NECKTIED does not detect the time zone on these cameras (yet); their daylight saving time follows the set offset (Europe, USA/Canada only).
 
 ² The original offers it only in the app; NECKTIED adds it to the camera menu.
 
@@ -100,6 +100,15 @@ For the A329 family, the A229 family and the VS1. The firmware is not changed.
 To stop: delete the NECKTIED files from the card (or format the card in the camera) – the camera is
 original again. The package contains a `README.txt` with all details.
 
+**A119 V3 – test without flashing (experimental, not yet confirmed on any device):** the patcher (step 2)
+also builds test files from your original firmware: `FWA119VT.BIN` and `FW96670T.BIN` (in the browser:
+"Try it first"; on the command line: folder `NECKTIED_SD_TEST`). Copy both to the root directory of the card –
+**without** `FWA119V3.bin` on the card, because that file would install the update – and switch the camera on.
+If the camera starts the test file, the NECKTIED power-on image appears and the version ends with `-NECKTIED`;
+during the test the camera may run with factory settings. If everything looks as usual, the camera does not
+support this test start; nothing was written. To stop: delete the test files. Please report your result as a
+GitHub issue – whether this works is still open.
+
 ### Step 2: install it permanently (flash)
 
 1. Download the original firmware for your camera from VIOFO: <https://www.viofo.com/pages/firmware>.
@@ -138,7 +147,7 @@ original again. The package contains a `README.txt` with all details.
 | **A119 family** | | | |
 | A119 Mini | V1.2 (2026-08-26) | patcher | experimental |
 | A119 Mini 2 | V3.2 (2026-08-26) | patcher | experimental |
-| A119 V3 | V2.6 (2024-10-31) | patcher | experimental |
+| A119 V3 | V2.6 (2024-10-31) | patcher (test without flashing: experimental) | experimental |
 | **More cameras (planned)** | | | |
 | A129 Plus Duo | V2.0 (2024-10-16) | planned | planned |
 | A129 Pro Duo | V2.91 (2024-09-13) | planned | planned |

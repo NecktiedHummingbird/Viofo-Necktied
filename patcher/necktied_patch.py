@@ -6,7 +6,9 @@
 Download the original firmware of your camera from https://www.viofo.com/pages/firmware.
 The patcher recognises the model, checks the file against the list of supported originals,
 builds the NECKTIED firmware on your computer, verifies it and writes it to the folder
-NECKTIED next to the original, with the file name the camera expects.
+NECKTIED next to the original, with the file name the camera expects. For cameras that may
+start NECKTIED from the memory card without flashing (experimental), it also writes the test
+files to the folder NECKTIED_SD_TEST.
 
 There are no options: every camera gets the same NECKTIED settings.
 Texts are in German if your system language is German, otherwise in English.
@@ -20,6 +22,7 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from necktied_patcher import Package, PackageError, PatchError, patch, set_lang  # noqa: E402
+from necktied_patcher.core import TBIN_DIR  # noqa: E402
 from necktied_patcher.i18n import _  # noqa: E402
 
 PACKAGE = "necktied-package.zip"
@@ -30,7 +33,9 @@ HILFE_DE = """NECKTIED-Patcher für A329-Familie, A229-Familie, VS1 und A119 Min
 Lade die Original-Firmware deiner Kamera von https://www.viofo.com/pages/firmware. Der Patcher
 erkennt das Modell, prüft die Datei gegen die Liste der unterstützten Originale, baut die
 NECKTIED-Firmware auf deinem Rechner, prüft sie und schreibt sie in den Ordner NECKTIED neben
-dem Original, mit dem Dateinamen, den die Kamera erwartet.
+dem Original, mit dem Dateinamen, den die Kamera erwartet. Für Kameras, die NECKTIED womöglich
+ohne Flashen von der Speicherkarte starten (experimentell), legt er zusätzlich die Testdateien
+im Ordner NECKTIED_SD_TEST ab.
 
 Optionen gibt es keine: Jede Kamera bekommt dieselben NECKTIED-Vorgaben.
 Die Texte sind deutsch, wenn die Systemsprache Deutsch ist, sonst englisch.
@@ -55,6 +60,31 @@ def find_package():
         if os.path.isfile(p):
             return p
     return None
+
+
+def write_checked(path, image, sha):
+    """Write atomically and read back; returns False on a checksum mismatch."""
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    tmp = path + ".tmp"
+    with open(tmp, "wb") as f:
+        f.write(image)
+    os.replace(tmp, path)
+    return hashlib.sha256(open(path, "rb").read()).hexdigest() == sha
+
+
+def write_tbin(folder, image, rep):
+    """Group C: the same image under the test names (start without flashing, experimental)."""
+    if not rep.get("tbin_names"):
+        return True
+    print(_("Test files (start without flashing, experimental):"))
+    for n in rep["tbin_names"]:
+        p = os.path.join(folder, n)
+        if not write_checked(p, image, rep["image_sha256"]):
+            print(_("ERROR: reading back %s gave a different checksum") % p)
+            return False
+        print("  " + p)
+    print("\n" + rep["tbin_instructions"] + "\n")
+    return True
 
 
 def main(argv):
@@ -97,16 +127,12 @@ def main(argv):
     if os.path.exists(out) and os.path.samefile(out, src):
         print(_("ABORTED: output %s is the original – the original is needed for the way back") % out)
         return 1
-    os.makedirs(os.path.dirname(out), exist_ok=True)
-    tmp = out + ".tmp"
-    with open(tmp, "wb") as f:
-        f.write(image)
-    os.replace(tmp, out)
-    back = hashlib.sha256(open(out, "rb").read()).hexdigest()
-    if back != rep["image_sha256"]:
+    if not write_checked(out, image, rep["image_sha256"]):
         print(_("ERROR: reading back %s gave a different checksum") % out)
         return 1
-    print(_("Written: %s\n  sha256 %s (%d bytes, %.1f s)\n") % (out, back, len(image), rep["seconds"]))
+    print(_("Written: %s\n  sha256 %s (%d bytes, %.1f s)\n") % (out, rep["image_sha256"], len(image), rep["seconds"]))
+    if not write_tbin(os.path.join(os.path.dirname(os.path.abspath(src)), TBIN_DIR), image, rep):
+        return 1
     print(rep["instructions"])
     return 0
 

@@ -50,7 +50,8 @@ def cameras(manifest):
             else FAMILY.get(m["group"], "Other")
         out.append(dict(bin=b, name=m["model"], file=b + ".bin", version=short_version(m["version"]),
                         tested=bool(m.get("verified")), display=bool(m.get("logo")),
-                        sd=m["group"] if m["group"] in SD else None, family=fam, rtos=m["group"] == "C"))
+                        sd=m["group"] if m["group"] in SD else None, family=fam, rtos=m["group"] == "C",
+                        tbin=list(m.get("tbin") or [])))   # test files built in the browser (experimental)
     order = {"A329": 0, "A229": 1, "A119": 2, "Other": 3}
     out.sort(key=lambda c: (order.get(c["family"], 9), c["bin"] != "FWA329S", c["rtos"], c["name"]))
     return out

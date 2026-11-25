@@ -55,6 +55,7 @@ body:
       label: How did you install it?
       options:
         - SD mode (firmware not changed)
+        - Test without flashing (A119 V3 test files FWA119VT.BIN / FW96670T.BIN, experimental)
         - Flashed, patched with the web page
         - Flashed, patched with the command line
     validations:

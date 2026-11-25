@@ -44,6 +44,25 @@ const TEXT = {
     sdNone: "There is no SD mode for the {0}. This camera can only get NECKTIED through a firmware update.",
     sdOk: "Everything works? Then you can install NECKTIED permanently.",
     sdInstall: "Install permanently now",
+    tbTry1: "test file built from your firmware", tbTry2: "nothing is written to the camera", tbTry3: "not yet confirmed for this camera",
+    tbH: "Try it without flashing (experimental)",
+    tbLead: "The patcher builds a test file from the original firmware. The camera may start it from the memory card without installing anything. Whether the {0} does this is not yet confirmed – your result helps.",
+    tbWarnH: "Experimental test",
+    tbWarnP: "Nothing is written to the camera, but the test starts modified firmware. Whether the camera accepts the test file is not yet confirmed. Use it at your own risk.",
+    tbAck: "I understand this and test at my own risk.",
+    tbBuildBtn: "Build the test files",
+    tbProgH: "Building the test files for the {0}",
+    tbDoneH: "Done: the test files are ready",
+    tbDoneP: "Save both files. They have the same content; the camera looks for one of the two names.",
+    tbHowH: "How to test",
+    tb1: "Copy {0} to the top level of the memory card. Do not rename them.",
+    tb2: "There must be <b>no</b> {0} on the card – that file would install the update.",
+    tb3: "Put the card into the camera and switch it on.",
+    tb4Display: "It works if the NECKTIED start-up picture appears and the version in the menu ends with {0}. During the test the camera may run with factory settings.",
+    tb4: "It works if the version in the menu or app ends with {0}. During the test the camera may run with factory settings.",
+    tb5: "If everything looks as usual, the camera does not start the test file. Nothing was changed.",
+    tbStop: "To end the test: delete the test files from the card.",
+    tbReport: "Please report your result (worked or not) as an issue on GitHub.",
     getH: "Download the original firmware",
     getPanelH: "Get the original firmware from VIOFO",
     camera: "Camera", version: "Version", file: "File",
@@ -127,6 +146,25 @@ const TEXT = {
     sdNone: "Für die {0} gibt es keinen SD-Modus. Die Kamera kann NECKTIED nur über ein Firmware-Update bekommen.",
     sdOk: "Läuft alles? Dann kannst du NECKTIED dauerhaft installieren.",
     sdInstall: "Jetzt dauerhaft installieren",
+    tbTry1: "Testdatei aus deiner Firmware gebaut", tbTry2: "in die Kamera wird nichts geschrieben", tbTry3: "für diese Kamera noch nicht bestätigt",
+    tbH: "Ohne Flashen ausprobieren (experimentell)",
+    tbLead: "Der Patcher baut aus der Original-Firmware eine Testdatei. Die Kamera startet sie womöglich von der Speicherkarte, ohne etwas zu installieren. Ob die {0} das tut, ist noch nicht bestätigt – dein Ergebnis hilft.",
+    tbWarnH: "Experimenteller Test",
+    tbWarnP: "In die Kamera wird nichts geschrieben, aber der Test startet veränderte Firmware. Ob die Kamera die Testdatei annimmt, ist noch nicht bestätigt. Die Nutzung erfolgt auf eigenes Risiko.",
+    tbAck: "Ich habe das verstanden und teste auf eigenes Risiko.",
+    tbBuildBtn: "Testdateien bauen",
+    tbProgH: "Testdateien für die {0} werden gebaut",
+    tbDoneH: "Fertig: die Testdateien sind bereit",
+    tbDoneP: "Speichere beide Dateien. Sie haben denselben Inhalt; die Kamera sucht nach einem der beiden Namen.",
+    tbHowH: "So testest du",
+    tb1: "{0} ins oberste Verzeichnis der Speicherkarte kopieren. Die Namen nicht ändern.",
+    tb2: "Auf der Karte darf <b>keine</b> {0} liegen – diese Datei würde das Update einspielen.",
+    tb3: "Karte in die Kamera stecken und die Kamera einschalten.",
+    tb4Display: "Es klappt, wenn das NECKTIED-Startbild erscheint und die Version im Menü auf {0} endet. Während des Tests läuft die Kamera womöglich mit Werkseinstellungen.",
+    tb4: "Es klappt, wenn die Version im Menü oder in der App auf {0} endet. Während des Tests läuft die Kamera womöglich mit Werkseinstellungen.",
+    tb5: "Sieht alles aus wie immer, startet die Kamera die Testdatei nicht. Es wurde nichts verändert.",
+    tbStop: "Test beenden: die Testdateien von der Karte löschen.",
+    tbReport: "Bitte melde dein Ergebnis (geklappt oder nicht) als Issue auf GitHub.",
     getH: "Original-Firmware herunterladen",
     getPanelH: "Original-Firmware von VIOFO holen",
     camera: "Kamera", version: "Version", file: "Datei",
@@ -293,9 +331,18 @@ function sdPanel(c) {
     <li><span>${t("sd3")}</span></li><li><span>${t("sd4", mono("-NECKTIED"))}</span></li></ol>
     <p class="stepnote">${t("sdStop")}</p></div>`;
 }
-function warnAck() {
-  return `<div class="panel warn"><h3>${t("warnH")}</h3><p>${t("warnP")}</p>
-    <label class="ack"><input type="checkbox" id="ack"> ${t("ack")}</label></div>`;
+const isTbin = (c) => !!(c && c.tbin && c.tbin.length);          // group C: test start without flashing
+const tbinMode = (c) => S.mode === "sd" && isTbin(c);
+function warnAck(tb) {
+  return `<div class="panel warn"><h3>${t(tb ? "tbWarnH" : "warnH")}</h3><p>${t(tb ? "tbWarnP" : "warnP")}</p>
+    <label class="ack"><input type="checkbox" id="ack"> ${t(tb ? "tbAck" : "ack")}</label></div>`;
+}
+function tbinHowTo(c) {
+  const names = c.tbin.map(mono).join(" + ");
+  return `<div class="stack"><h3>${t("tbHowH")}</h3><ol class="steps">
+    <li><span>${t("tb1", names)}</span></li><li><span>${t("tb2", mono(c.file))}</span></li><li><span>${t("tb3")}</span></li>
+    <li><span>${t(c.display ? "tb4Display" : "tb4", mono("-NECKTIED"))}</span></li><li><span>${t("tb5")}</span></li></ol>
+    <p class="stepnote">${t("tbStop")}</p><p class="stepnote">${t("tbReport")}</p></div>`;
 }
 function howTo(c) {
   return `<div class="stack"><h3>${t("howH")}</h3><ol class="steps">
@@ -307,10 +354,11 @@ function howTo(c) {
 
 /* ---------------------------------------------------------------- build */
 function build(work, c) {
-  work.innerHTML = warnAck() + `<div class="row"><button class="btn primary" id="go" type="button" disabled>${t("buildBtn")}</button></div>`;
+  const tb = tbinMode(c);
+  work.innerHTML = warnAck(tb) + `<div class="row"><button class="btn primary" id="go" type="button" disabled>${t(tb ? "tbBuildBtn" : "buildBtn")}</button></div>`;
   $("#ack").addEventListener("change", (e) => { $("#go").disabled = !e.target.checked; });
   $("#go").addEventListener("click", async () => {
-    work.innerHTML = `<div class="panel prog"><h3>${t("progH", esc(c.name))}</h3><div class="bar"><i id="pbar"></i></div>
+    work.innerHTML = `<div class="panel prog"><h3>${t(tb ? "tbProgH" : "progH", esc(c.name))}</h3><div class="bar"><i id="pbar"></i></div>
       <p id="ptext" class="stepnote"></p><p class="stepnote">${t("progP")}</p></div>`;
     await whenReady();
     W.pending = (m) => {
@@ -327,6 +375,18 @@ function build(work, c) {
       if (imageUrl) URL.revokeObjectURL(imageUrl);
       imageUrl = URL.createObjectURL(new Blob([m.image], { type: "application/octet-stream" }));
       S.done = true;
+      if (tb) {
+        const names = m.report.tbin_names;
+        work.innerHTML = `<div class="panel okp"><h3>${t("tbDoneH")}</h3><p>${t("tbDoneP")}</p>
+            <div class="row">${names.map((n) => `<a class="btn primary" href="${imageUrl}" download="${esc(n)}">${t("save", esc(n))}</a>`).join("")}</div>
+            <p class="stepnote">${t("saveHint", names.map(mono).join(" / "))}</p>
+            <details><summary class="stepnote">${t("checks")}</summary><pre class="checks">${esc(m.report.checks.join("\n"))}</pre></details></div>
+          ${tbinHowTo(c)}<p>${t("sdOk")}</p>
+          <div class="row"><button class="btn primary" id="inst" type="button">${t("sdInstall")}</button><button class="btn" id="again" type="button">${t("startOver")}</button></div>`;
+        $("#inst").addEventListener("click", () => { S.done = false; S.mode = "flash"; S.step = 3; render(); });
+        $("#again").addEventListener("click", () => { Object.keys(S).forEach((k) => delete S[k]); S.step = 1; render(); });
+        return;
+      }
       work.innerHTML = `<div class="panel okp"><h3>${t("doneH", esc(m.report.file_name))}</h3><p>${t("doneP")}</p>
           <div class="row"><a class="btn primary" href="${imageUrl}" download="${esc(m.report.file_name)}">${t("save", esc(m.report.file_name))}</a></div>
           <p class="stepnote">${t("saveHint", mono(m.report.file_name))}</p>
@@ -343,7 +403,8 @@ function render() {
   const el = $("#app");
   if (!site) return;
   const c = camByBin(S.cam);
-  const plan = S.mode === "sd" ? ["sCamera", "sWay", "sTry"]
+  const plan = S.mode === "sd" && !isTbin(c) ? ["sCamera", "sWay", "sTry"]
+    : S.mode === "sd" ? (S.fileOk ? ["sCamera", "sWay", "sTry"] : ["sCamera", "sWay", "sGet", "sTry"])
     : S.fileOk ? ["sCamera", "sWay", "sBuild"] : ["sCamera", "sWay", "sGet", "sBuild"];
   const total = plan.length;
   const cur = Math.min(S.step, total);
@@ -368,19 +429,22 @@ function render() {
       ${S.fileOk ? `<div class="panel okp found"><span class="pill ok">${t("detected")}</span><span>${t("detectedTxt", esc(c.name), mono(c.version), mono(S.file))}</span></div>` : ""}
       <h1>${t("q2")}</h1><p class="lead">${t("q2lead", esc(c.name), t(c.tested ? "leadTested" : "leadLab"))}</p>
       <div class="choices">
-        <button class="choice" type="button" data-mode="sd" ${c.sd ? "" : "disabled"}><span class="pill ${c.sd ? "ok" : "bad"}">${t(c.sd ? "tryPill" : "tryNo")}</span><h3>${t("tryH")}</h3>
-          <ul><li>${t("try1")}</li><li>${t("try2")}</li><li>${t("try3")}</li></ul></button>
+        ${isTbin(c) ? `<button class="choice" type="button" data-mode="sd"><span class="pill warn">${t("experimental")}</span><h3>${t("tryH")}</h3>
+          <ul><li>${t("tbTry1")}</li><li>${t("tbTry2")}</li><li>${t("tbTry3")}</li></ul></button>`
+        : `<button class="choice" type="button" data-mode="sd" ${c.sd ? "" : "disabled"}><span class="pill ${c.sd ? "ok" : "bad"}">${t(c.sd ? "tryPill" : "tryNo")}</span><h3>${t("tryH")}</h3>
+          <ul><li>${t("try1")}</li><li>${t("try2")}</li><li>${t("try3")}</li></ul></button>`}
         <button class="choice" type="button" data-mode="flash"><span class="pill muted">${t("instPill")}</span><h3>${t("instH")}</h3>
           <ul><li>${t("inst1")}</li><li>${t(S.fileOk ? "inst2File" : "inst2")}</li><li>${t("inst3")}</li></ul></button>
       </div><div class="row">${back}</div></div>`;
-  } else if (here === "sTry") {
+  } else if (here === "sTry" && !isTbin(c)) {
     el.innerHTML = `<div class="stack">${stepper}<h1>${t("sdH")}</h1>${sdPanel(c)}<p>${t("sdOk")}</p>
       <div class="row">${back}<button class="btn primary" type="button" data-mode="flash">${t("sdInstall")}</button></div></div>`;
   } else if (here === "sGet") {
     el.innerHTML = `<div class="stack">${stepper}<h1>${t("getH")}</h1>${originalPanel(c)}
       <div class="row">${back}<button class="btn primary" type="button" data-next>${t("haveIt")}</button></div></div>`;
   } else {
-    el.innerHTML = `<div class="stack">${stepper}<h1>${t("buildH")}</h1>
+    const tb = tbinMode(c);
+    el.innerHTML = `<div class="stack">${stepper}<h1>${t(tb ? "tbH" : "buildH")}</h1>${tb ? `<p class="lead">${t("tbLead", esc(c.name))}</p>` : ""}
       <p class="lead">${S.fileOk ? t("buildWithFile", mono(S.file)) : t("buildDrop")}</p>${loadingLine()}
       <div id="work"></div><div class="row">${back}</div></div>`;
     const work = $("#work");

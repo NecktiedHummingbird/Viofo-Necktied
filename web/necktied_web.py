@@ -50,6 +50,7 @@ def run(lang, progress):
     image, rep = patch(_orig, _pkg, variant="release", logo=True, goodbye=True, compression="none",
                        progress=lambda f, text: progress(f, text))
     report = {k: rep[k] for k in ("bin_name", "file_name", "model", "firmware", "checks", "seconds")}
+    report["tbin_names"] = rep.get("tbin_names", [])     # group C: test start without flashing
     return image, report
 
 

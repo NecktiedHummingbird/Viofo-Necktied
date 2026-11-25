@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         Please check first that your camera runs **exactly** the firmware version listed in the README – other versions are not supported.
-        If the camera does not start any more: install the original firmware from <https://www.viofo.com/pages/firmware> the same way you installed NECKTIED, or remove the NECKTIED files from the card if you used SD mode.
+        If the camera does not start any more: install the original firmware from <https://www.viofo.com/pages/firmware> the same way you installed NECKTIED, or remove the NECKTIED files from the card if you used SD mode or the test without flashing.
 
         **Privacy:** photos, videos and files can show your location, licence plates or faces. Crop or blur them before uploading.
 
@@ -57,6 +57,7 @@ body:
         - Patcher web page
         - Command line patcher
         - Camera in SD mode
+        - Camera with test files (test without flashing, A119 V3)
         - Camera with flashed NECKTIED firmware
     validations:
       required: true

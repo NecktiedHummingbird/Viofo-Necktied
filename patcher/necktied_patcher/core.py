@@ -144,6 +144,23 @@ Way back: the same with the original from https://www.viofo.com/pages/firmware (
 Status of this model: %s.""") % (mod["model"], bname, fw, fw, mod["version"], mod["sha256"][:16], status)
 
 
+TBIN_DIR = "NECKTIED_SD_TEST"    # folder of the test files (start without flashing), next to the folder NECKTIED
+
+
+def tbin_instructions(bname, mod, names):
+    """Test without flashing (group C, EXPERIMENTAL): the loader may start a T.bin from the card in RAM."""
+    return _("""Test without flashing (EXPERIMENTAL, %s):
+  1. Copy %s from the folder %s to the root directory of the card.
+     There must be NO %s on the card at the same time – that file would install the update.
+  2. Eject the card cleanly, insert it into the camera and switch it on. Nothing is written to the camera.
+  3. If the camera starts the test file, the NECKTIED start-up picture appears and the firmware version
+     in the menu ends with -NECKTIED. During the test the camera may run with factory settings.
+     If the normal VIOFO start-up picture appears, the camera does not support this test start.
+  4. To end the test: delete %s from the card.
+It is not yet confirmed which cameras start the test file. Please report your result (GitHub issue).""") % (
+        mod["model"], " / ".join(names), TBIN_DIR, bname + ".bin", " / ".join(names))
+
+
 def patch(original, package, variant="release", logo=True, compression="none", progress=None, verify=True,
           goodbye=True, lang=None):
     """Build the NECKTIED image. Returns (image bytes, report dict). Raises PatchError.
@@ -194,6 +211,9 @@ def patch(original, package, variant="release", logo=True, compression="none", p
         report["seconds"] = round(time.time() - t0, 2)
         report["step_times"] = times
         report["instructions"] = card_instructions(bname, mod, rtos_model=True)
+        report["tbin_names"] = list(mod.get("tbin") or [])
+        if report["tbin_names"]:
+            report["tbin_instructions"] = tbin_instructions(bname, mod, report["tbin_names"])
         return image, report
     pk = nv.Pack(original)
     if pk.ids() != sorted(mod["part_ids"]):
